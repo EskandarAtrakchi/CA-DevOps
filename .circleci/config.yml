@@ -1,0 +1,25 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/node:current # This uses a Docker image with Node.js
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Update NPM
+          command: 'sudo npm install -g npm@latest'
+      - run:
+          name: Install Dependencies
+          command: npm install
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - main
