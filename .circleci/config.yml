@@ -6,25 +6,32 @@ jobs:
       - image: cimg/node:current
     steps:
       - checkout
-      - run: npm install
-      # Add tests here if you have them: - run: npm test
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - run:
+          name: Run Unit Tests
+          command: npm test
 
   deploy:
     machine:
       image: ubuntu-2204:current 
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "REPLACE_WITH_YOUR_SSH_KEY_FINGERPRINT_IF_REQUIRED"
       - run:
           name: Deploy Over SSH
           command: |
-            ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS \<< EOF
+            ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS << EOF
               rm -rf CA-DevOps
               git clone https://github.com/EskandarAtrakchi/CA-DevOps.git
               cd CA-DevOps
               chmod +x deploy.sh
               ./deploy.sh
             EOF
- 
+
 workflows:
   version: 2
   build_and_deploy:
