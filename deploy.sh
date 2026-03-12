@@ -1,20 +1,7 @@
 #!/bin/bash
-
-# Navigate to the app folder
 cd ~/CA-DevOps
-
-# Kill any old versions of the app
-sudo pkill node || true
-
-# Install dependencies
+# This creates the dummy files automatically during deployment
+touch privatekey.pem server.crt certificate.pem server.key
 npm install
-
-# --- THE FIX: Create the missing files the app is looking for ---
-touch privatekey.pem
-touch server.crt
-touch certificate.pem
-
-# Start the app in the background
-nohup npm start > /dev/null 2>&1 &
-
-echo "Deployment triggered!" 
+sudo pkill node || true
+nohup npm start > nohup.out 2>&1 &
