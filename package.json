@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha test/*.js",
+    "test": "mocha test/*.js --reporter mocha-circleci-reporter --reporter-options mochaFile=test-results/mocha/results.xml",
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {
