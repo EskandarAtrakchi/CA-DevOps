@@ -18,13 +18,10 @@ jobs:
       image: ubuntu-2204:current 
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "REPLACE_WITH_YOUR_SSH_KEY_FINGERPRINT_IF_REQUIRED"
       - run:
           name: Deploy Over SSH
           command: |
-            ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS << EOF
+            ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS \<< EOF
               rm -rf CA-DevOps
               git clone https://github.com/EskandarAtrakchi/CA-DevOps.git
               cd CA-DevOps
