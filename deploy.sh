@@ -17,4 +17,4 @@ touch certificate.pem
 # Start the app in the background
 nohup npm start > /dev/null 2>&1 &
 
-echo "Deployment triggered!"
+echo "Deployment triggered!" 
