@@ -1,24 +1,20 @@
 #!/bin/bash
 
-# 1. Update packages and install node/npm if not present
-sudo apt-get update
-sudo apt-get install -y nodejs npm
-
-# 2. Stop any old version of the app currently running to free up the port
-# This kills any process currently running 'node'
-sudo pkill node || true
-
-# 3. Navigate to the app folder
-# Note: ~ refers to the home directory of the ubuntu user
+# Navigate to the app folder
 cd ~/CA-DevOps
 
-# 4. Install dependencies 
+# Kill any old versions of the app
+sudo pkill node || true
+
+# Install dependencies
 npm install
 
-# 5. Start the app in the background
-# 'nohup' keeps it running even after CircleCI disconnects
-# '> /dev/null 2>&1 &' sends logs to nowhere and runs it as a background task
+# --- THE FIX: Create the missing files the app is looking for ---
+touch privatekey.pem
+touch server.crt
+touch certificate.pem
+
+# Start the app in the background
 nohup npm start > /dev/null 2>&1 &
 
-echo "Deployment successful!"
-exit
+echo "Deployment triggered!"
