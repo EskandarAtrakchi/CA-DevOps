@@ -3,23 +3,39 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: cimg/node:current # This uses a Docker image with Node.js
-    working_directory: ~/repo
+      - image: cimg/node:current
+    steps:
+      - checkout
+      - run: npm install
+      # Add tests here if you have them: - run: npm test
+
+  deploy:
+    machine:
+      image: ubuntu-2204:current # Using a machine image to support SSH easily
     steps:
       - checkout
       - run:
-          name: Update NPM
-          command: 'sudo npm install -g npm@latest'
-      - run:
-          name: Install Dependencies
-          command: npm install
+          name: Deploy Over SSH
+          command: |
+            ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS << EOF
+              rm -rf CA-DevOps
+              git clone https://github.com/EskandarAtrakchi/CA-DevOps.git
+              cd YOUR_REPO_NAME
+              chmod +x deploy.sh
+              ./deploy.sh
+            EOF
 
 workflows:
   version: 2
-  build_and_test:
+  build_and_deploy:
     jobs:
       - build:
           filters:
             branches:
-              only:
-                - main
+              only: main
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
